@@ -2,19 +2,29 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Sample DataFrame (replace with your actual data)
-data = {'Zona': ['Norte', 'Sur', 'Este', 'Oeste', 'Norte', 'Sur', 'Este', 'Oeste'],
-        'Valor': [10, 15, 12, 8, 11, 16, 13, 9]}
-df = pd.DataFrame(data)
+# Cargar el archivo de datos
+try:
+    df = pd.read_excel("SalidaFinal.xlsx")
 
-st.title("Gráfico por Zona")
+    # Filtros
+    region_filter = st.selectbox("Selecciona una Región", df['Region'].unique())
+    state_filter = st.selectbox("Selecciona un Estado", df['State'].unique())
 
-# Select the column for the chart's y-axis
-y_column = st.selectbox("Selecciona la columna para el eje Y:", df.columns)
+    # Aplicar filtros
+    filtered_df = df[(df['Region'] == region_filter) & (df['State'] == state_filter)]
 
-# Create the chart based on the selected column and zone
-if y_column:
-    fig = px.bar(df, x="Zona", y=y_column, title=f"Gráfico de {y_column} por Zona", color='Zona')
+    # Mostrar el DataFrame filtrado
+    st.dataframe(filtered_df)
+
+    # Gráfica de pastel
+    fig = px.pie(filtered_df, names='Category', title='Distribución por Categoría')
     st.plotly_chart(fig)
-else:
-    st.warning("Por favor, selecciona una columna para el eje Y.")
+
+except FileNotFoundError:
+    st.error("Error: El archivo 'SalidaFinal.xlsx' no se encuentra.")
+
+except KeyError as e:
+    st.error(f"Error: La columna '{e}' no se encuentra en el archivo. Asegúrate de que el archivo contenga las columnas correctas.")
+
+except Exception as e:
+    st.error(f"Error al leer el archivo o generar la gráfica: {e}")
