@@ -2,29 +2,28 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Cargar el archivo de datos
-try:
-    df = pd.read_excel("SalidaFinalVentas.xlsx")
+# Sample DataFrame (replace with your actual data)
+data = {'Region': ['Norte', 'Norte', 'Norte', 'Sur', 'Sur', 'Sur', 'Este', 'Este', 'Este', 'Oeste', 'Oeste', 'Oeste'],
+        'Estado': ['Aguascalientes', 'Coahuila', 'Chihuahua', 'Michoacán', 'Guerrero', 'Oaxaca', 'Veracruz', 'Tabasco', 'Quintana Roo', 'Baja California', 'Sonora', 'Sinaloa'],
+        'Categoria': ['Electronica', 'Ropa', 'Hogar', 'Electronica', 'Ropa', 'Hogar', 'Electronica', 'Ropa', 'Hogar','Electronica', 'Ropa', 'Hogar'],
+        'Valor': [10, 15, 12, 8, 11, 16, 13, 9, 7, 14, 10, 6]}
+df = pd.DataFrame(data)
 
-    # Filtros
-    region_filter = st.selectbox("Selecciona una Región", df['Region'].unique())
-    state_filter = st.selectbox("Selecciona un Estado", df['State'].unique())
+st.title("Gráfico de Pastel de Categorías por Región y Estado")
 
-    # Aplicar filtros
-    filtered_df = df[(df['Region'] == region_filter) & (df['State'] == state_filter)]
+# Region filter
+selected_region = st.selectbox("Selecciona una Región", df['Region'].unique())
 
-    # Mostrar el DataFrame filtrado
-    st.dataframe(filtered_df)
+# Filter the DataFrame based on the selected region
+filtered_df = df[df['Region'] == selected_region]
 
-    # Gráfica de pastel
-    fig = px.pie(filtered_df, names='Category', title='Distribución por Categoría')
-    st.plotly_chart(fig)
+# State filter
+selected_state = st.selectbox("Selecciona un Estado", filtered_df['Estado'].unique())
 
-except FileNotFoundError:
-    st.error("Error: El archivo 'SalidaFinal.xlsx' no se encuentra.")
+# Filter the DataFrame based on the selected state
+filtered_df = filtered_df[filtered_df['Estado'] == selected_state]
 
-except KeyError as e:
-    st.error(f"Error: La columna '{e}' no se encuentra en el archivo. Asegúrate de que el archivo contenga las columnas correctas.")
 
-except Exception as e:
-    st.error(f"Error al leer el archivo o generar la gráfica: {e}")
+# Create the pie chart
+fig = px.pie(filtered_df, names='Categoria', values='Valor', title=f"Categorías de Productos en {selected_state}, {selected_region}")
+st.plotly_chart(fig)
