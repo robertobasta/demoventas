@@ -4,7 +4,7 @@ import plotly.express as px
 
 # Cargar el archivo de datos
 try:
-    df = pd.read_excel("SalidaFinal.xlsx")
+    df = pd.read_excel("SalidaFinalVentas.xlsx")
 
     # Filtros
     region_filter = st.selectbox("Selecciona una Región", df['Region'].unique())
