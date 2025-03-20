@@ -13,6 +13,13 @@ except ModuleNotFoundError:
 # Conectar con el archivo Excel
 df = pd.read_excel('SalidaFinalVentas.xlsx')
 
+# Verificar que las columnas necesarias existen en el DataFrame
+required_columns = ['Producto', 'Ventas', 'Fecha']
+for col in required_columns:
+    if col not in df.columns:
+        st.error(f"Error: La columna '{col}' no existe en el archivo Excel.")
+        st.stop()
+
 # Crear gráficos con la información
 def crear_graficos():
     st.title('Análisis de Ventas')
