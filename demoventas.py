@@ -5,6 +5,7 @@ try:
     import matplotlib.pyplot as plt
 except ModuleNotFoundError:
     st.error("Error: matplotlib no está instalado. Por favor, instálalo para continuar.")
+    st.stop()
 
 # Conectar con el archivo Excel
 df = pd.read_excel('SalidaFinalVentas.xlsx')
