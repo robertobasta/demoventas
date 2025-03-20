@@ -22,20 +22,20 @@ def crear_graficos():
     st.title('Sales Analysis')
 
     # Verificar que las columnas necesarias existen en el DataFrame
-    required_columns = ['Product', 'Sales']
+    required_columns = ['Producto', 'Ventas']
     for col in required_columns:
         if col not in df.columns:
             st.error(f"Error: La columna '{col}' no existe en el archivo Excel.")
             st.stop()
 
     # Gráfico de barras de ventas por producto
-    if 'Product' in df.columns and 'Sales' in df.columns:
-        st.subheader('Sales by Product')
+    if 'Producto' in df.columns and 'Ventas' in df.columns:
+        st.subheader('Ventas por Producto')
         fig, ax = plt.subplots()
-        df.groupby('Product')['Sales'].sum().plot(kind='bar', ax=ax)
-        ax.set_title('Sales by Product')
-        ax.set_xlabel('Product')
-        ax.set_ylabel('Sales')
+        df.groupby('Producto')['Ventas'].sum().plot(kind='bar', ax=ax)
+        ax.set_title('Ventas por Producto')
+        ax.set_xlabel('Producto')
+        ax.set_ylabel('Ventas')
         st.pyplot(fig)
 
 # Llamar a la función para crear los gráficos
