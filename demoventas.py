@@ -49,3 +49,15 @@ if 'Estado' in df.columns:
         st.error("La columna 'Estado' no se encuentra en los datos filtrados. Por favor, verifica el archivo Excel.")
 else:
     st.error("La columna 'Estado' no se encuentra en los datos. Por favor, verifica el archivo Excel.")
+
+# Crear el gráfico de barras
+st.title("Gráfico de Barras de Ventas por Categoría de Producto")
+
+# Filtrar los datos para el gráfico de barras
+bar_chart_df = filtered_df.groupby('CategoriaProducto')['Ventas'].sum().reset_index()
+
+# Crear el gráfico de barras
+fig_bar = px.bar(bar_chart_df, x='CategoriaProducto', y='Ventas', title=f"Ventas por Categoría de Producto en {selected_region} en {selected_year}")
+
+# Mostrar el gráfico de barras
+st.plotly_chart(fig_bar)
