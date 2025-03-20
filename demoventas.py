@@ -61,3 +61,33 @@ fig_bar = px.bar(bar_chart_df, x='CategoriaProducto', y='Ventas', title=f"Ventas
 
 # Mostrar el gráfico de barras
 st.plotly_chart(fig_bar)
+
+# Crear el gráfico de líneas para mostrar las ventas a lo largo del tiempo
+st.title("Gráfico de Líneas de Ventas a lo Largo del Tiempo")
+
+# Filtrar los datos para el gráfico de líneas
+line_chart_df = filtered_df.groupby('Mes')['Ventas'].sum().reset_index()
+
+# Crear el gráfico de líneas
+fig_line = px.line(line_chart_df, x='Mes', y='Ventas', title=f"Ventas a lo Largo del Tiempo en {selected_region} en {selected_year}")
+
+# Mostrar el gráfico de líneas
+st.plotly_chart(fig_line)
+
+# Crear el gráfico de dispersión para mostrar la relación entre ventas y precio
+st.title("Gráfico de Dispersión de Ventas vs Precio")
+
+# Crear el gráfico de dispersión
+fig_scatter = px.scatter(filtered_df, x='Precio', y='Ventas', title=f"Relación entre Ventas y Precio en {selected_region} en {selected_year}")
+
+# Mostrar el gráfico de dispersión
+st.plotly_chart(fig_scatter)
+
+# Crear el gráfico de caja para mostrar la distribución de ventas por categoría de producto
+st.title("Gráfico de Caja de Distribución de Ventas por Categoría de Producto")
+
+# Crear el gráfico de caja
+fig_box = px.box(filtered_df, x='CategoriaProducto', y='Ventas', title=f"Distribución de Ventas por Categoría de Producto en {selected_region} en {selected_year}")
+
+# Mostrar el gráfico de caja
+st.plotly_chart(fig_box)
