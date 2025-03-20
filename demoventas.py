@@ -2,6 +2,18 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+
+import pandas as pd
+
+try:
+    df = pd.read_excel("/workspaces/demoventas/SalidaFinalVentas.xlsx")
+    print(df.head())
+except FileNotFoundError:
+    print("El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
+except Exception as e:
+    print(f"Error al leer el archivo: {e}")
+
+    
 # Load the Excel file
 try:
     df = pd.read_excel("/workspaces/demoventas/SalidaFinalVentas.xlsx")
