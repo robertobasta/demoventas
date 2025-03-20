@@ -4,9 +4,9 @@ import plotly.express as px
 
 # Load the Excel file
 try:
-    df = pd.read_excel("salidafinalventas.xlsx")
+    df = pd.read_excel("/workspaces/demoventas/SalidaFinalVentas.xlsx")
 except FileNotFoundError:
-    st.error("El archivo 'salidafinalventas.xlsx' no se encontró. Por favor, asegúrate de que el archivo esté en el mismo directorio que la aplicación Streamlit.")
+    st.error("El archivo 'SalidaFinalVentas.xlsx' no se encontró. Por favor, asegúrate de que el archivo esté en el directorio '/workspaces/demoventas/'.")
     st.stop()
 
 # Mostrar el DataFrame
