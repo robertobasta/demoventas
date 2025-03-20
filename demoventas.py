@@ -21,14 +21,18 @@ selected_region = st.selectbox("Selecciona una región:", available_regions)
 # Filter data based on the selected region
 filtered_df = df[df['Region'] == selected_region]
 
-# Check if 'Año' column exists in the original dataframe
-if 'Año' in df.columns:
-    # Year filter
-    available_years = df['Año'].unique()
-    selected_year = st.selectbox("Selecciona un año:", available_years)
+# Check if 'Ship Date' and 'Order Date' columns exist in the original dataframe
+if 'Ship Date' in df.columns and 'Order Date' in df.columns:
+    # Convert 'Ship Date' and 'Order Date' to datetime
+    df['Ship Date'] = pd.to_datetime(df['Ship Date'])
+    df['Order Date'] = pd.to_datetime(df['Order Date'])
+
+    # Year filter based on 'Ship Date'
+    available_years = df['Ship Date'].dt.year.unique()
+    selected_year = st.selectbox("Selecciona un año (Ship Date):", available_years)
 
     # Filter data based on the selected year
-    filtered_df = filtered_df[filtered_df['Año'] == selected_year]
+    filtered_df = filtered_df[filtered_df['Ship Date'].dt.year == selected_year]
 
     # Check if 'Estado' column exists in the original dataframe
     if 'Estado' in df.columns:
@@ -68,10 +72,10 @@ if 'Año' in df.columns:
     st.title("Gráfico de Líneas de Ventas a lo Largo del Tiempo")
 
     # Filtrar los datos para el gráfico de líneas
-    line_chart_df = filtered_df.groupby('Mes')['Ventas'].sum().reset_index()
+    line_chart_df = filtered_df.groupby(filtered_df['Order Date'].dt.month)['Ventas'].sum().reset_index()
 
     # Crear el gráfico de líneas
-    fig_line = px.line(line_chart_df, x='Mes', y='Ventas', title=f"Ventas a lo Largo del Tiempo en {selected_region} en {selected_year}")
+    fig_line = px.line(line_chart_df, x='Order Date', y='Ventas', title=f"Ventas a lo Largo del Tiempo en {selected_region} en {selected_year}")
 
     # Mostrar el gráfico de líneas
     st.plotly_chart(fig_line)
@@ -94,4 +98,4 @@ if 'Año' in df.columns:
     # Mostrar el gráfico de caja
     st.plotly_chart(fig_box)
 else:
-    st.error("La columna 'Año' no se encuentra en los datos. Por favor, verifica el archivo Excel.")
+    st.error("Las columnas 'Ship Date' y 'Order Date' no se encuentran en los datos. Por favor, verifica el archivo Excel.")
