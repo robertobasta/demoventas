@@ -19,30 +19,19 @@ except FileNotFoundError:
 
 # Crear gráficos con la información
 def crear_graficos():
-    st.title('Análisis de Ventas')
+    st.title('Sales Analysis')
 
     # Gráfico de barras de ventas por producto
-    if 'Producto' in df.columns and 'Ventas' in df.columns:
-        st.subheader('Ventas por Producto')
+    if 'Product' in df.columns and 'Sales' in df.columns:
+        st.subheader('Sales by Product')
         fig, ax = plt.subplots()
-        df.groupby('Producto')['Ventas'].sum().plot(kind='bar', ax=ax)
-        ax.set_title('Ventas por Producto')
-        ax.set_xlabel('Producto')
-        ax.set_ylabel('Ventas')
-        st.pyplot(fig)
-
-    # Gráfico de líneas de ventas por mes
-    if 'Fecha' in df.columns and 'Ventas' in df.columns:
-        st.subheader('Ventas por Mes')
-        df['Fecha'] = pd.to_datetime(df['Fecha'])
-        df.set_index('Fecha', inplace=True)
-        fig, ax = plt.subplots()
-        df.resample('M')['Ventas'].sum().plot(kind='line', ax=ax)
-        ax.set_title('Ventas por Mes')
-        ax.set_xlabel('Mes')
-        ax.set_ylabel('Ventas')
+        df.groupby('Product')['Sales'].sum().plot(kind='bar', ax=ax)
+        ax.set_title('Sales by Product')
+        ax.set_xlabel('Product')
+        ax.set_ylabel('Sales')
         st.pyplot(fig)
 
 # Llamar a la función para crear los gráficos
 if __name__ == '__main__':
     crear_graficos()
+
