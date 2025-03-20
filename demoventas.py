@@ -21,6 +21,13 @@ except FileNotFoundError:
 def crear_graficos():
     st.title('Sales Analysis')
 
+    # Verificar que las columnas necesarias existen en el DataFrame
+    required_columns = ['Product', 'Sales']
+    for col in required_columns:
+        if col not in df.columns:
+            st.error(f"Error: La columna '{col}' no existe en el archivo Excel.")
+            st.stop()
+
     # Gráfico de barras de ventas por producto
     if 'Product' in df.columns and 'Sales' in df.columns:
         st.subheader('Sales by Product')
