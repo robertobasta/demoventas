@@ -17,36 +17,31 @@ except FileNotFoundError:
     st.error("Error: El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
     st.stop()
 
-# Verificar que las columnas necesarias existen en el DataFrame
-required_columns = ['Producto', 'Ventas', 'Fecha']
-for col in required_columns:
-    if col not in df.columns:
-        st.error(f"Error: La columna '{col}' no existe en el archivo Excel.")
-        st.stop()
-
 # Crear gráficos con la información
 def crear_graficos():
     st.title('Análisis de Ventas')
 
     # Gráfico de barras de ventas por producto
-    st.subheader('Ventas por Producto')
-    fig, ax = plt.subplots()
-    df.groupby('Producto')['Ventas'].sum().plot(kind='bar', ax=ax)
-    ax.set_title('Ventas por Producto')
-    ax.set_xlabel('Producto')
-    ax.set_ylabel('Ventas')
-    st.pyplot(fig)
+    if 'Producto' in df.columns and 'Ventas' in df.columns:
+        st.subheader('Ventas por Producto')
+        fig, ax = plt.subplots()
+        df.groupby('Producto')['Ventas'].sum().plot(kind='bar', ax=ax)
+        ax.set_title('Ventas por Producto')
+        ax.set_xlabel('Producto')
+        ax.set_ylabel('Ventas')
+        st.pyplot(fig)
 
     # Gráfico de líneas de ventas por mes
-    st.subheader('Ventas por Mes')
-    df['Fecha'] = pd.to_datetime(df['Fecha'])
-    df.set_index('Fecha', inplace=True)
-    fig, ax = plt.subplots()
-    df.resample('M')['Ventas'].sum().plot(kind='line', ax=ax)
-    ax.set_title('Ventas por Mes')
-    ax.set_xlabel('Mes')
-    ax.set_ylabel('Ventas')
-    st.pyplot(fig)
+    if 'Fecha' in df.columns and 'Ventas' in df.columns:
+        st.subheader('Ventas por Mes')
+        df['Fecha'] = pd.to_datetime(df['Fecha'])
+        df.set_index('Fecha', inplace=True)
+        fig, ax = plt.subplots()
+        df.resample('M')['Ventas'].sum().plot(kind='line', ax=ax)
+        ax.set_title('Ventas por Mes')
+        ax.set_xlabel('Mes')
+        ax.set_ylabel('Ventas')
+        st.pyplot(fig)
 
 # Llamar a la función para crear los gráficos
 if __name__ == '__main__':
