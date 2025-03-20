@@ -1,11 +1,14 @@
 import pandas as pd
 import streamlit as st
+import subprocess
+import sys
 
 try:
     import matplotlib.pyplot as plt
 except ModuleNotFoundError:
-    st.error("Error: matplotlib no está instalado. Por favor, instálalo para continuar.")
-    st.stop()
+    st.error("Error: matplotlib no está instalado. Instalando matplotlib...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "matplotlib"])
+    import matplotlib.pyplot as plt
 
 # Conectar con el archivo Excel
 df = pd.read_excel('SalidaFinalVentas.xlsx')
