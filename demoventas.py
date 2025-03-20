@@ -11,7 +11,11 @@ except ModuleNotFoundError:
     import matplotlib.pyplot as plt
 
 # Conectar con el archivo Excel
-df = pd.read_excel('SalidaFinalVentas.xlsx')
+try:
+    df = pd.read_excel('SalidaFinalVentas.xlsx')
+except FileNotFoundError:
+    st.error("Error: El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
+    st.stop()
 
 # Verificar que las columnas necesarias existen en el DataFrame
 required_columns = ['Producto', 'Ventas', 'Fecha']
