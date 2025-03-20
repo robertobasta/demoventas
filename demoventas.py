@@ -4,16 +4,13 @@ import plotly.express as px
 
 # Load the Excel file
 try:
-    df = pd.read_excel("SalidaFinalVentas.xlsx")
+    df = pd.read_excel("salidafinalventas.xlsx")
 except FileNotFoundError:
-    st.error("El archivo 'SalidaFinalVentas.xlsx' no se encontró. Por favor, asegúrate de que el archivo esté en el mismo directorio que la aplicación Streamlit.")
+    st.error("El archivo 'salidafinalventas.xlsx' no se encontró. Por favor, asegúrate de que el archivo esté en el mismo directorio que la aplicación Streamlit.")
     st.stop()
 
-# Leer el archivo Excel
-df = pd.read_excel('salidafinalventas.xlsx')
-
 # Mostrar el DataFrame
-print(df)
+st.write(df)
 
 st.title("Gráfico de Pastel de Categorías de Productos")
 
