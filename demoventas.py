@@ -9,6 +9,12 @@ except FileNotFoundError:
     st.error("El archivo 'SalidaFinalVentas.xlsx' no se encontró. Por favor, asegúrate de que el archivo esté en el mismo directorio que la aplicación Streamlit.")
     st.stop()
 
+# Leer el archivo Excel
+df = pd.read_excel('salidafinalventas.xlsx')
+
+# Mostrar el DataFrame
+print(df)
+
 st.title("Gráfico de Pastel de Categorías de Productos")
 
 # Region filter
