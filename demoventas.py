@@ -18,20 +18,24 @@ selected_region = st.selectbox("Selecciona una región:", available_regions)
 # Filter data based on the selected region
 filtered_df = df[df['Region'] == selected_region]
 
-# Check if 'Estado' column exists
-if 'Estado' in filtered_df.columns:
-    # State filter (dependent on the selected region)
-    available_states = filtered_df['Estado'].unique()
-    selected_state = st.selectbox("Selecciona un estado:", available_states)
+# Check if 'Estado' column exists in the original dataframe
+if 'Estado' in df.columns:
+    # Check if 'Estado' column exists in the filtered dataframe
+    if 'Estado' in filtered_df.columns:
+        # State filter (dependent on the selected region)
+        available_states = filtered_df['Estado'].unique()
+        selected_state = st.selectbox("Selecciona un estado:", available_states)
 
-    # Filter data based on the selected state
-    filtered_df = filtered_df[filtered_df['Estado'] == selected_state]
+        # Filter data based on the selected state
+        filtered_df = filtered_df[filtered_df['Estado'] == selected_state]
 
-    # Create the pie chart
-    if not filtered_df.empty:
-        fig = px.pie(filtered_df, names='CategoriaProducto', title=f"Categorías de Productos en {selected_state}, {selected_region}", hole=0.3)
-        st.plotly_chart(fig)
+        # Create the pie chart
+        if not filtered_df.empty:
+            fig = px.pie(filtered_df, names='CategoriaProducto', title=f"Categorías de Productos en {selected_state}, {selected_region}", hole=0.3)
+            st.plotly_chart(fig)
+        else:
+            st.warning("No hay datos disponibles para la región y estado seleccionados.")
     else:
-        st.warning("No hay datos disponibles para la región y estado seleccionados.")
+        st.error("La columna 'Estado' no se encuentra en los datos filtrados. Por favor, verifica el archivo Excel.")
 else:
     st.error("La columna 'Estado' no se encuentra en los datos. Por favor, verifica el archivo Excel.")
