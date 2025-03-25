@@ -1,44 +1,48 @@
-import pandas as pd
+# streamlit_app.py
+
 import streamlit as st
-import subprocess
-import sys
+import pandas as pd
+import matplotlib.pyplot as plt
 
-try:
-    import matplotlib.pyplot as plt
-except ModuleNotFoundError:
-    st.error("Error: matplotlib no está instalado. Instalando matplotlib...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "matplotlib"])
-    import matplotlib.pyplot as plt
+# Cargar los datos
+@st.cache_data
+def load_data():
+    df = pd.read_excel("SalidaFinalVentas.xlsx", sheet_name="Datos")
+    df["Order Date"] = pd.to_datetime(df["Order Date"])
+    df["Año"] = df["Order Date"].dt.year
+    return df
 
-# Conectar con el archivo Excel
-try:
-    df = pd.read_excel('SalidaFinalVentas.xlsx')
-except FileNotFoundError:
-    st.error("Error: El archivo 'SalidaFinalVentas.xlsx' no se encontró.")
-    st.stop()
+df = load_data()
 
-# Crear gráficos con la información
-def crear_graficos():
-    st.title('Sales Analysis')
+st.title("📊 Dashboard de Ventas")
 
-    # Verificar que las columnas necesarias existen en el DataFrame
-    required_columns = ['Producto', 'Ventas']
-    for col in required_columns:
-        if col not in df.columns:
-            st.error(f"Error: La columna '{col}' no existe en el archivo Excel.")
-            st.stop()
+# Filtros
+years = df["Año"].unique()
+segmentos = df["Segment"].unique()
 
-    # Gráfico de barras de ventas por producto
-    if 'Producto' in df.columns and 'Ventas' in df.columns:
-        st.subheader('Ventas por Producto')
-        fig, ax = plt.subplots()
-        df.groupby('Producto')['Ventas'].sum().plot(kind='bar', ax=ax)
-        ax.set_title('Ventas por Producto')
-        ax.set_xlabel('Producto')
-        ax.set_ylabel('Ventas')
-        st.pyplot(fig)
+año_seleccionado = st.selectbox("Selecciona un año", sorted(years))
+segmento_seleccionado = st.selectbox("Selecciona un segmento", sorted(segmentos))
 
-# Llamar a la función para crear los gráficos
-if __name__ == '__main__':
-    crear_graficos()
+df_filtrado = df[(df["Año"] == año_seleccionado) & (df["Segment"] == segmento_seleccionado)]
 
+# Gráfico de barras: Ventas por región
+st.subheader("Ventas por Región")
+ventas_region = df_filtrado.groupby("Region")["Sales"].sum()
+st.bar_chart(ventas_region)
+
+# Gráfico de pastel: Ventas por Segmento
+st.subheader("Distribución de Ventas por Segmento (año completo)")
+ventas_segmento = df[df["Año"] == año_seleccionado].groupby("Segment")["Sales"].sum()
+fig1, ax1 = plt.subplots()
+ax1.pie(ventas_segmento, labels=ventas_segmento.index, autopct="%1.1f%%")
+ax1.axis("equal")
+st.pyplot(fig1)
+
+# Gráfico de línea: Ventas por fecha
+st.subheader("Ventas a lo largo del tiempo")
+ventas_tiempo = df_filtrado.groupby("Order Date")["Sales"].sum()
+st.line_chart(ventas_tiempo)
+
+# Mostrar tabla
+st.subheader("Datos filtrados")
+st.dataframe(df_filtrado)
