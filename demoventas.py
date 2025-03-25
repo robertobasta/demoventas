@@ -1,10 +1,8 @@
-# streamlit_app.py
-
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
 
-# Cargar los datos
+# Cargar datos
 @st.cache_data
 def load_data():
     df = pd.read_excel("SalidaFinalVentas.xlsx", sheet_name="Datos")
@@ -14,35 +12,59 @@ def load_data():
 
 df = load_data()
 
-st.title("📊 Dashboard de Ventas")
+st.title("📈 Dashboard de Ventas Superstore")
 
-# Filtros
-years = df["Año"].unique()
-segmentos = df["Segment"].unique()
+# Gráfica 1: Ventas por Año, Categoría y Sub-Categoría (facet_col=Category)
+st.subheader("Gráfica 1: Ventas por Año, Categoría y Sub-Categoría")
+fig1 = px.bar(
+    df,
+    x="Año",
+    y="Sales",
+    color="Sub-Category",
+    facet_col="Category",
+    title="Ventas Acumuladas por Año, Categoría y Sub-Categoría",
+    labels={"Sales": "Ventas"},
+    height=500
+)
+st.plotly_chart(fig1)
 
-año_seleccionado = st.selectbox("Selecciona un año", sorted(years))
-segmento_seleccionado = st.selectbox("Selecciona un segmento", sorted(segmentos))
+# Gráfica 2: Ventas por Año, Categoría y Sub-Categoría (facet_col=Año)
+st.subheader("Gráfica 2: Ventas por Año, Categoría y Sub-Categoría (Distribuidas por Año)")
+fig2 = px.bar(
+    df,
+    x="Category",
+    y="Sales",
+    color="Sub-Category",
+    facet_col="Año",
+    title="Ventas por Categoría y Sub-Categoría en cada Año",
+    labels={"Sales": "Ventas"},
+    height=500
+)
+st.plotly_chart(fig2)
 
-df_filtrado = df[(df["Año"] == año_seleccionado) & (df["Segment"] == segmento_seleccionado)]
+# Gráfica 3: Línea de ventas acumuladas por año y categoría
+st.subheader("Gráfica 3: Línea de Ventas por Año y Categoría")
+df_line = df.groupby(["Año", "Category"])["Sales"].sum().reset_index()
+fig3 = px.line(
+    df_line,
+    x="Año",
+    y="Sales",
+    color="Category",
+    title="Ventas Acumuladas por Año y Categoría",
+    labels={"Sales": "Ventas"},
+    markers=True
+)
+st.plotly_chart(fig3)
 
-# Gráfico de barras: Ventas por región
-st.subheader("Ventas por Región")
-ventas_region = df_filtrado.groupby("Region")["Sales"].sum()
-st.bar_chart(ventas_region)
-
-# Gráfico de pastel: Ventas por Segmento
-st.subheader("Distribución de Ventas por Segmento (año completo)")
-ventas_segmento = df[df["Año"] == año_seleccionado].groupby("Segment")["Sales"].sum()
-fig1, ax1 = plt.subplots()
-ax1.pie(ventas_segmento, labels=ventas_segmento.index, autopct="%1.1f%%")
-ax1.axis("equal")
-st.pyplot(fig1)
-
-# Gráfico de línea: Ventas por fecha
-st.subheader("Ventas a lo largo del tiempo")
-ventas_tiempo = df_filtrado.groupby("Order Date")["Sales"].sum()
-st.line_chart(ventas_tiempo)
-
-# Mostrar tabla
-st.subheader("Datos filtrados")
-st.dataframe(df_filtrado)
+# Gráfica 4: Barras de ventas acumuladas por región
+st.subheader("Gráfica 4: Ventas Acumuladas por Región")
+df_region = df.groupby("Region")["Sales"].sum().reset_index()
+fig4 = px.bar(
+    df_region,
+    x="Region",
+    y="Sales",
+    title="Ventas Acumuladas por Región",
+    labels={"Sales": "Ventas"},
+    height=400
+)
+st.plotly_chart(fig4)
