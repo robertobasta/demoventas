@@ -12,7 +12,10 @@ def load_data():
 
 df = load_data()
 
+# Presentación
 st.title("📈 Dashboard de Ventas Superstore")
+st.markdown("**Autor:** Roberto Carlos Bastarrachea Medina")
+st.markdown("---")
 
 # Gráfica 1: Ventas por Año, Categoría y Sub-Categoría (facet_col=Category)
 st.subheader("Gráfica 1: Ventas por Año, Categoría y Sub-Categoría")
